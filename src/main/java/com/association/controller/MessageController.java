@@ -25,9 +25,9 @@ public class MessageController {
 	MessageService messageService;
 
 	@GetMapping("/{id}")
-	public List<Message> getMessage(@PathVariable("id") Long id) {
-		log.info(" get message");
-		List<Message> result = messageService.getAllByReciver(id);
+	public List<Message> getMessage(@PathVariable("id") String id) {
+		log.info(" get message :{}", id);
+		List<Message> result = messageService.getAllByReciver(Long.valueOf(id));
 		log.info("message :{}", result.toString());
 		return result;
 	}

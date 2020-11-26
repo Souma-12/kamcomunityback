@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -29,7 +31,8 @@ public class Don implements Serializable {
 	@Column
 	private double montant;
 	@Column
-	private Date date_creation;
+	@CreationTimestamp
+	private Date dateAjout;
 	@Column
 	private String description;
 
@@ -46,15 +49,15 @@ public class Don implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Don(Long id, double montant, Date date_creation, String description, Utilisateur utilisateurs,
-			Association associations) {
+	public Don(Long id, double montant, Date dateAjout, String description, Utilisateur utilisateur,
+			Association association) {
 		super();
 		this.id = id;
 		this.montant = montant;
-		this.date_creation = date_creation;
+		this.dateAjout = dateAjout;
 		this.description = description;
-		this.utilisateur = utilisateurs;
-		this.association = associations;
+		this.utilisateur = utilisateur;
+		this.association = association;
 	}
 
 	public Long getId() {
@@ -73,12 +76,12 @@ public class Don implements Serializable {
 		this.montant = montant;
 	}
 
-	public Date getDate_creation() {
-		return date_creation;
+	public Date getDateAjout() {
+		return dateAjout;
 	}
 
-	public void setDate_creation(Date date_creation) {
-		this.date_creation = date_creation;
+	public void setDateAjout(Date dateAjout) {
+		this.dateAjout = dateAjout;
 	}
 
 	public String getDescription() {
@@ -89,30 +92,27 @@ public class Don implements Serializable {
 		this.description = description;
 	}
 
-	public Utilisateur getUtilisateurs() {
+	public Utilisateur getUtilisateur() {
 		return utilisateur;
 	}
 
-	public void setUtilisateurs(Utilisateur utilisateurs) {
-		this.utilisateur = utilisateurs;
+	public void setUtilisateur(Utilisateur utilisateur) {
+		this.utilisateur = utilisateur;
 	}
 
-	public Association getAssociations() {
+	public Association getAssociation() {
 		return association;
 	}
 
-	public void setAssociations(Association associations) {
-		this.association = associations;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public void setAssociation(Association association) {
+		this.association = association;
 	}
 
 	@Override
 	public String toString() {
-		return "Don [id=" + id + ", montant=" + montant + ", date_creation=" + date_creation + ", description="
-				+ description + ", utilisateur=" + utilisateur + ", association=" + association + "]";
+		return "Don [id=" + id + ", montant=" + montant + ", dateAjout=" + dateAjout + ", description=" + description
+				+ ", utilisateur=" + utilisateur + ", association=" + association + "]";
 	}
 
+	
 }

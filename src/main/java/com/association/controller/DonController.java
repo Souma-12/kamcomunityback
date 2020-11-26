@@ -16,29 +16,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.association.entity.Association;
 import com.association.entity.Don;
+import com.association.entity.Utilisateur;
+import com.association.services.AssociationService;
 import com.association.services.DonService;
+import com.association.services.UtilisateurService;
+import com.association.utils.ApiConstants;
+import com.association.utils.SumResponseByAssociation;
+import com.association.utils.SumResponseByUser;
 
 @RestController
-@RequestMapping("/api/don")
-@CrossOrigin(origins = "*") 
+@RequestMapping(path = ApiConstants.API + ApiConstants.DON)
+@CrossOrigin(origins = "*")
 public class DonController {
 
 	private final Logger log = LoggerFactory.getLogger(DonController.class);
+
 	@Autowired
 	DonService donService;
-	@Autowired
-	DonService utilisateurService;
-	@Autowired
-	DonService associationService;
 
-	@GetMapping("/get")
+	@Autowired
+	UtilisateurService utilisateurService;
+
+	@Autowired
+	AssociationService associationService;
+
+	@GetMapping(path = ApiConstants.GET)
 	public List<Don> getAllDons() {
 		final List<Don> listDon = donService.getAll();
 		return listDon;
 	}
 
-	@GetMapping("/get/{id}")
+	@GetMapping(path = ApiConstants.GET + ApiConstants.ID)
 	public Don getDon(@PathVariable Long id) {
 		log.info("REST request to get Don : {}", id);
 		Don don = null;
@@ -59,10 +69,13 @@ public class DonController {
 	@PostMapping("/save")
 	public Don createDon(@RequestBody Don don) throws URISyntaxException {
 		log.info("REST request to save Don : {}", don);
-
+		Utilisateur user = utilisateurService.findByUsername(don.getUtilisateur().getEmail());
 		if (don.getId() != null) {
 			log.info("A new don cannot already have an ID", "userManagement", "idexists");
 		} else {
+			log.info("user.getAssociations().get(0) : {}", user.getAssociations().get(0));
+
+			don.setAssociation(user.getAssociations().get(0));
 			Don newDon = donService.save(don);
 			return newDon;
 		}
@@ -82,19 +95,40 @@ public class DonController {
 
 	}
 
-	@GetMapping("/{id_utilisateur}")
-	public List<Don> getDons(@PathVariable("id") Long id) {
+	@GetMapping("/utilisateur/{id_utilisateur}")
+	public List<Don> getDons(@PathVariable("id_utilisateur") Long id) {
 		log.info(" get don");
 		List<Don> result = donService.getAllByUtilisateur(id);
 		log.info("don :{}", result.toString());
 		return result;
 	}
 
-	
-	  @GetMapping("/{id_association}") 
-	  public List<Don> getDonsAssociation(@PathVariable("id") Long id) { log.info(" get don"); 
-	  List<Don> result = donService.getAllByAssociation(id); 
-	  log.info("don :{}", result.toString());
-	  return result;
-	 
-}}
+	@GetMapping("/association/{id_association}")
+	public List<Don> getDonsAssociation(@PathVariable("id_association") Long id) {
+		log.info(" get don");
+		List<Don> result = donService.getAllByAssociation(id);
+		log.info("don :{}", result.toString());
+		return result;
+
+	}
+
+	@GetMapping("/association/somme/{id}")
+	public SumResponseByAssociation getSommeDonsByAssociation(@PathVariable("id") Long id) {
+		log.info(" get don");
+		SumResponseByAssociation result = donService.SommeByAssociation(id);
+
+		log.info("don :{}", result.toString());
+		return result;
+
+	}
+
+	@GetMapping("/utilisateur/somme/{id}")
+	public SumResponseByUser getSommeDonsByUtilisateur(@PathVariable("id") Long id) {
+		log.info(" get don");
+		SumResponseByUser result = donService.SommeByUtilisateur(id);
+		log.info("don :{}", result.toString());
+		return result;
+
+	}
+
+}

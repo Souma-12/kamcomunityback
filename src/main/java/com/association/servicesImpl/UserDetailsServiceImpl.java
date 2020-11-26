@@ -26,10 +26,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		log.info("zzzzzzzzz", username);
+		log.info("zzzzzzz :{}",username);
 
 		Utilisateur utilisateur = utilisateurRepository.findByUsername(username);
-		log.info("ssss", utilisateur);
+		log.info("ssss:{}", utilisateur);
 
 		if (utilisateur == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");

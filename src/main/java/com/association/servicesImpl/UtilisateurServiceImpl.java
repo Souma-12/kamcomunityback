@@ -1,6 +1,5 @@
 package com.association.servicesImpl;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,13 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.association.entity.Role;
 import com.association.entity.Utilisateur;
+import com.association.repository.RoleRepository;
 import com.association.repository.UtilisateurRepository;
 import com.association.services.UtilisateurService;
 
@@ -25,6 +23,9 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
 	@Autowired
 	UtilisateurRepository utilisateurRepository;
+
+	@Autowired
+	RoleRepository roleRepository;
 
 	public UtilisateurServiceImpl(UtilisateurRepository utilisateurRepositroy, HttpServletRequest request) {
 		super();
@@ -45,7 +46,10 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	}
 
 	@Override
+	@Transactional
 	public Utilisateur save(Utilisateur utilisateur) {
+		log.info("sdvsd :{}", roleRepository.findById(utilisateur.getRole().getId()).get());
+		utilisateur.setRole(roleRepository.findById(utilisateur.getRole().getId()).get());
 		if (utilisateur != null)
 			return utilisateurRepository.save(utilisateur);
 		return utilisateur;
@@ -94,8 +98,21 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 		log.info("zzzzzzzzz", username);
 
 		return null;
-		
+
 	}
-	
-	
+
+	@Override
+	public List<Utilisateur> findAllAdmin() {
+		Role role = roleRepository.getOne((long) 1);
+		List<Utilisateur> users = utilisateurRepository.findAllByRole(role);
+		return users;
+	}
+
+	@Override
+	public List<Utilisateur> findAllAdherent() {
+		Role role = roleRepository.getOne((long) 3);
+		List<Utilisateur> users = utilisateurRepository.findAllByRole(role);
+		return users;
+	}
+
 }

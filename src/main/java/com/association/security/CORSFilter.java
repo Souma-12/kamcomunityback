@@ -18,7 +18,7 @@ public class CORSFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;
 		HttpServletRequest request = (HttpServletRequest) req;
 
-		response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
 		response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
 		response.setHeader("Access-Control-Max-Age", "3600");
@@ -32,7 +32,7 @@ public class CORSFilter implements Filter {
 			}
 		} else {
 			System.out.println("Pre-flight");
-			response.setHeader("Access-Control-Allow-Methods", "POST,GET,DELETE");
+			response.setHeader("Access-Control-Allow-Methods", "POST,PUT,GET,DELETE");
 			response.setHeader("Access-Control-Max-Age", "3600");
 			response.setHeader("Access-Control-Allow-Headers", "authorization, content-type,"
 					+ "access-control-request-headers,access-control-request-method,accept,origin,authorization,x-requested-with");

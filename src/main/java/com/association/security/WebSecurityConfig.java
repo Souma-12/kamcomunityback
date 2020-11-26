@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.association.servicesImpl.UserDetailsServiceImpl;
@@ -53,7 +54,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.authorizeRequests().antMatchers("/authentification/**").permitAll().and().authorizeRequests()
 				.antMatchers("/api/utilisateur/findByLogin/**").permitAll().and().authorizeRequests()
-				.antMatchers("/api/utilisateur/save/**").permitAll().anyRequest().authenticated().and()
+				.antMatchers("/api/utilisateur/save/**").permitAll().and().authorizeRequests()
+				.antMatchers("/api/utilisateur/uploadfile/**").permitAll().anyRequest().authenticated().and()
 				.exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
 		JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(userDetailsService, jwtTokenUtil,
 				"Authorization");
@@ -67,7 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public BCryptPasswordEncoder encoder() {
+	public PasswordEncoder encoder() {
 		return new BCryptPasswordEncoder();
 	}
 

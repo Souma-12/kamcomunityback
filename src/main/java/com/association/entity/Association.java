@@ -1,6 +1,7 @@
 package com.association.entity;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class Association implements Serializable {
 	@Column
 	private Date fondation;
 	@Column
-	private String logo;
+	private  byte[] photo;
 	@Column
 	private Long tel;
 	@Column
@@ -64,7 +65,7 @@ public class Association implements Serializable {
 	}
 
 	public Association(Long id_association, String nom, String presentation, String siteWeb, String adresse,
-			Long taille, String type, Date fondation, String logo, Long tel, String email, Pays pays,
+			Long taille, String type, Date fondation, byte[] photo, Long tel, String email, Pays pays,
 			List<Reseau> reseaux) {
 		super();
 		this.id_association = id_association;
@@ -75,7 +76,7 @@ public class Association implements Serializable {
 		this.taille = taille;
 		this.type = type;
 		this.fondation = fondation;
-		this.logo = logo;
+		this.photo = photo;
 		this.tel = tel;
 		this.email = email;
 		this.pays = pays;
@@ -146,12 +147,12 @@ public class Association implements Serializable {
 		this.fondation = fondation;
 	}
 
-	public String getLogo() {
-		return logo;
+	public byte[] getPhoto() {
+		return photo;
 	}
 
-	public void setLogo(String logo) {
-		this.logo = logo;
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
 	}
 
 	public Long getTel() {
@@ -186,16 +187,12 @@ public class Association implements Serializable {
 		this.reseaux = reseaux;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	@Override
 	public String toString() {
 		return "Association [id_association=" + id_association + ", nom=" + nom + ", presentation=" + presentation
 				+ ", siteWeb=" + siteWeb + ", adresse=" + adresse + ", taille=" + taille + ", type=" + type
-				+ ", fondation=" + fondation + ", logo=" + logo + ", tel=" + tel + ", email=" + email + ", pays=" + pays
-				+ ", reseaux=" + reseaux + "]";
+				+ ", fondation=" + fondation + ", photo=" + Arrays.toString(photo) + ", tel=" + tel + ", email=" + email
+				+ ", pays=" + pays + ", reseaux=" + reseaux + "]";
 	}
 
 	

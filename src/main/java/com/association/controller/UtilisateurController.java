@@ -2,6 +2,7 @@ package com.association.controller;
 
 import java.net.URISyntaxException;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.association.entity.Don;
 import com.association.entity.Utilisateur;
 import com.association.services.UtilisateurService;
 
@@ -54,19 +58,20 @@ public class UtilisateurController {
 			result = utilisateurService.delete(id);
 		return result;
 	}
-
+	
+	
 
 	@PostMapping("/save")
 	public Utilisateur postUtilisateur(@RequestBody Utilisateur utilisateur) {
 		log.info("utilisateur :{}", utilisateur);
 		utilisateur.setUsername(utilisateur.getEmail());
-	     //utilisateur.setRole(com.association.entity.Role..name());
 		utilisateur.setPassword(bcryptEncoder.encode(utilisateur.getPassword()));
 		Utilisateur result = utilisateurService.save(utilisateur);
 		log.info("utilisateur :{}", result.toString());
 		return result;
 	}
-
+	
+	
 	@PutMapping("/update")
 	public Utilisateur updateUtilisateur(@RequestBody Utilisateur utilisateur) {
 		log.info("REST request to update Utilisateur : {}", utilisateur);
@@ -86,6 +91,41 @@ public class UtilisateurController {
 		Utilisateur utitlisateur = utilisateurService.findUtilisateurByEmail(login.toLowerCase());
 		log.info("result request to fing Utilisateur by login : {}", utitlisateur);
 		return utitlisateur;
+
+	}
+
+
+	@GetMapping(value = "/getAllAdmin")
+	public List<Utilisateur> getAllAdmin() {
+		log.info("REST request to find getAllAdmin  : {}");
+		List<Utilisateur> utitlisateurs = utilisateurService.findAllAdmin();
+		return utitlisateurs;
+
+	}
+
+	@PostMapping(value = "/uploadfile")
+	public boolean handleFileUpload(@RequestParam("file") MultipartFile file,
+			@RequestParam(value = "mail", required = true) String email) {
+		log.info("A new save file :{}, with email :{}: {}", file.getOriginalFilename(), email);
+
+		if (!file.isEmpty()) {
+			try {
+				Utilisateur utilisateur = utilisateurService.findByUsername(email);
+				utilisateur.setPhoto(file.getBytes());
+				utilisateurService.save(utilisateur);
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		return false;
+	}
+	@GetMapping(value = "/getAllAdherent")
+	public List<Utilisateur> getAllAdherent() {
+		log.info("REST request to find getAllAdherent  : {}");
+		List<Utilisateur> utitlisateurs = utilisateurService.findAllAdherent();
+		return utitlisateurs;
 
 	}
 

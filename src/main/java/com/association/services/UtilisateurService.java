@@ -20,5 +20,9 @@ public interface UtilisateurService {
 
 	Utilisateur findByUsername(String username);
 
+	List<Utilisateur> findAllAdmin();
+
+	List<Utilisateur> findAllAdherent();
+
 
 }

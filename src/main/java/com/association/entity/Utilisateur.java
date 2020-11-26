@@ -1,19 +1,28 @@
 package com.association.entity;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -37,26 +46,36 @@ public class Utilisateur implements Serializable {
 	@Column
 	private String username;
 	@Column
-	private String adresse;//min
+	private String adresse;// min
 	@Column
-	private String langue;//min
+	private String langue;// min
 	@Column
 	private String nationnalite;
 	@Column
+	private String telephone;
+	@Lob
+	@Column
+	private  byte[] photo;
+	@Column
+	@CreationTimestamp
 	private Date dateAjout;
 	@Column
+	@UpdateTimestamp
 	private Date dateModif;
 	@Email
 	@Column
 	private String email;
 	@Column
 	private String password;
-	
+
 	@ManyToMany
-	@JoinTable(name = "utilisateur_has_association", joinColumns = @JoinColumn(name = "id_utilisateur"), inverseJoinColumns = @JoinColumn(name = " id_association"))
+	@JoinTable(name = "utilisateur_has_association", 
+	joinColumns = @JoinColumn(name = "id_utilisateur"),
+	inverseJoinColumns = @JoinColumn(name = " id_association"))
 	List<Association> associations;
 
-	@ManyToOne
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "role")
 	private Role role;
 
 	@ManyToOne
@@ -64,12 +83,11 @@ public class Utilisateur implements Serializable {
 
 	public Utilisateur() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Utilisateur(Long id_utilisateur, String nom, String prenom, String username, String adresse, String langue,
-			String nationnalite, Date dateAjout, Date dateModif, @Email String email, String password,
-			List<Association> associations, Role role, Pays pays) {
+			String nationnalite, String telephone, byte[] photo, Date dateAjout, Date dateModif, @Email String email,
+			String password, List<Association> associations, Role role, Pays pays) {
 		super();
 		this.id_utilisateur = id_utilisateur;
 		this.nom = nom;
@@ -78,6 +96,8 @@ public class Utilisateur implements Serializable {
 		this.adresse = adresse;
 		this.langue = langue;
 		this.nationnalite = nationnalite;
+		this.telephone = telephone;
+		this.photo = photo;
 		this.dateAjout = dateAjout;
 		this.dateModif = dateModif;
 		this.email = email;
@@ -143,6 +163,22 @@ public class Utilisateur implements Serializable {
 		this.nationnalite = nationnalite;
 	}
 
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
+	public byte[] getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
+	}
+
 	public Date getDateAjout() {
 		return dateAjout;
 	}
@@ -199,18 +235,14 @@ public class Utilisateur implements Serializable {
 		this.pays = pays;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	@Override
 	public String toString() {
 		return "Utilisateur [id_utilisateur=" + id_utilisateur + ", nom=" + nom + ", prenom=" + prenom + ", username="
 				+ username + ", adresse=" + adresse + ", langue=" + langue + ", nationnalite=" + nationnalite
-				+ ", dateAjout=" + dateAjout + ", dateModif=" + dateModif + ", email=" + email + ", password="
-				+ password + ", associations=" + associations + ", role=" + role + ", pays=" + pays + "]";
+				+ ", telephone=" + telephone + ", photo=" + Arrays.toString(photo) + ", dateAjout=" + dateAjout
+				+ ", dateModif=" + dateModif + ", email=" + email + ", password=" + password + ", associations="
+				+ associations + ", role=" + role + ", pays=" + pays + "]";
 	}
 
 	
-
 }
